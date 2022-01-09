@@ -2,8 +2,8 @@
 
 **With Starter Template**
 
-- [User module with AdminLTE-2](tree/user-adminlte2)
-- [User module with AdminLTE-3](tree/user-adminlte3)
+- [User module with AdminLTE-2](https://github.com/medansoftware/Codeigniter-3-Basic-Starter/tree/user-adminlte2)
+- [User module with AdminLTE-3](https://github.com/medansoftware/Codeigniter-3-Basic-Starter/tree/user-adminlte3)
 
 ## Installed package starter for backend
 
