@@ -14,12 +14,26 @@ class User extends HMVC_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->library('template');
+		$this->template->includes(array(
+			'header' => 'parts/header',
+			'navbar' => 'parts/navbar',
+			'sidebar_left' => 'parts/sidebar-left',
+			'sidebar_right' => 'parts/sidebar-right',
+			'footer' => 'parts/footer'
+		), array(
+			'header' => array(
+				'title' => 'Medan Software'
+			),
+			'footer' => array(
+				'copyright' => 'Medan Software'
+			)
+		));
 	}
 
 	public function index()
 	{
-		$data['content'] = $this->load->view('home', array(), TRUE);
-		$this->load->view('base', $data);
+		$this->template->single_content('home');
 	}
 }
 
