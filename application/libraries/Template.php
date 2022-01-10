@@ -126,6 +126,7 @@ class Template
 	{
 		$default_option = array(
 			'merge_vars' => TRUE,
+			'merge_vars_as_page' => TRUE,
 			'return_loaded' => FALSE
 		);
 
@@ -143,7 +144,17 @@ class Template
 					// if $base_vars have key $include_vars
 					if (isset($merge_vars['include_vars']))
 					{
-						$include['vars'] = array_merge($include['vars'], $merge_vars['include_vars']);
+						if ($options['merge_vars_as_page'])
+						{
+							if (isset($merge_vars['include_vars'][$name]))
+							{
+								$include['vars'] = array_merge($include['vars'], $merge_vars['include_vars'][$name]);
+							}
+						}
+						else
+						{
+							$include['vars'] = array_merge($include['vars'], $merge_vars['include_vars']);
+						}
 					}
 					else
 					{
