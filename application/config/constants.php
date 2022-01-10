@@ -22,6 +22,13 @@ if (isset($_SERVER['SERVER_PORT']))
 
 /*
 |--------------------------------------------------------------------------
+| Current Database Group
+|--------------------------------------------------------------------------
+*/
+defined('CURRENT_DATABASE_GROUP') or define('CURRENT_DATABASE_GROUP', isset($_SERVER['CURRENT_DATABASE_GROUP']) ? $_SERVER['CURRENT_DATABASE_GROUP'] : 'default');
+
+/*
+|--------------------------------------------------------------------------
 | Display Debug backtrace
 |--------------------------------------------------------------------------
 |
