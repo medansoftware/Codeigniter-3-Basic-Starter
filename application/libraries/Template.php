@@ -5,9 +5,15 @@ class Template
 {
 	protected $ci;
 
-	protected $base_page;
+	public $base_page;
 
-	protected $include_pages;
+	public $debug = FALSE;
+
+	public $page_vars = array();
+
+	public $base_vars = array();
+
+	public $include_pages = array();
 
 	public function __construct($config = array())
 	{
@@ -47,33 +53,65 @@ class Template
 	 *
 	 * @return     array
 	 */
-	public function include($pages = array(), $content_data =  array(), $options = array())
+	public function includes($pages = array(), $vars =  array(), $options = array())
 	{
-		$default_options = array(
-			'return' => FALSE, // return array of included pages
-			'merge_include_pages' => FALSE, // merge with $this->include_pages
-			'return_loaded_view' => TRUE // return loaded view
+		$default_option = array(
+			'merge_page' => TRUE,
+			'return_pages' => FALSE
 		);
 
-		$options = array_merge($default_options, $options); // merge with $default_options
-		$include_pages = array(); // define for included pages
+		$options = array_merge($default_option, $options);
 
-		$is_array_assoc = (!empty($pages))?array_keys($pages) !== range(0, count($pages) - 1):FALSE; // is array assoc $pages
+		$include_pages = array();
 
-		foreach ($pages as $name => $page)
+		$page_num = 0;
+
+		foreach ($pages as $name => $file)
 		{
-			if (!$is_array_assoc)
+			$vars_array_assoc = (!empty($vars))?array_keys($vars) !== range(0, count($vars) - 1):FALSE; // is associated array of $vars
+			$page_array_assoc = (!empty($pages))?array_keys($pages) !== range(0, count($pages) - 1):FALSE; // is associated array of $pages
+
+			// set page name
+			if (!$page_array_assoc)
 			{
-				$name = explode('/', $page);
+				$name = explode('/', $file);
 				$name = end($name);
 			}
 
-			$include_pages[$name] = $this->ci->load->view($page, $content_data, $options['return_loaded_view']);
+			// set page vars
+			$data = array();
+
+			if (!$vars_array_assoc)
+			{
+				$data = array();
+
+				if (isset($vars[$page_num]))
+				{
+					$data = $vars[$page_num];
+				}
+			}
+			else
+			{
+				// assign vars by page name
+				$data = isset($vars[$name])?$vars[$name]:$vars;
+			}
+
+			$this->page_vars = $data;
+
+			$include_pages[$name] = array('file' => $file, 'vars' => $data);
+
+			$page_num++;
 		}
 
-		$this->include_pages = ($options['merge_include_pages'])?array_merge($this->include_pages, $include_pages):$include_pages;
-
-		return ($options['return'])?$include_pages:$this;
+		if ($options['return_pages'])
+		{
+			return $include_pages;
+		}
+		else
+		{
+			$this->include_pages = ($options['merge_page'])?array_merge($this->include_pages, $include_pages):$include_pages;
+			return $this;
+		}
 	}
 
 	/**
@@ -84,18 +122,42 @@ class Template
 	 * @param      array   $content_data   Option data for content page
 	 * @param      bool    $return_string  Return loaded view
 	 */
-	public function single_content($content, $options_data = array(), $content_data = array(), $return_string = FALSE)
+	public function single_content($content, $base_vars = array(), $page_vars = array(), $options = array())
 	{
+		$default_option = array(
+			'merge_vars' => TRUE,
+			'return_loaded' => FALSE
+		);
+
+		$options = array_merge($default_option, $options);
+
+		$merge_vars = $base_vars; // original $base_vars
+		unset($base_vars['include_vars']);
+
 		if (!empty($this->include_pages))
 		{
-			foreach ($this->include_pages as $name => $html)
+			foreach ($this->include_pages as $name => $include)
 			{
-				$options_data[$name] = $html;
+				if ($options['merge_vars'])
+				{
+					// if $base_vars have key $include_vars
+					if (isset($merge_vars['include_vars']))
+					{
+						$include['vars'] = array_merge($include['vars'], $merge_vars['include_vars']);
+					}
+					else
+					{
+						$include['vars'] = array_merge($include['vars'], $merge_vars);
+					}
+				}
+
+				$base_vars[$name] = $this->ci->load->view($include['file'], $include['vars'], TRUE);
+				// $base_vars[$name] = $include; // uncomment for debug $base_vars
 			}
 		}
 
-		$options_data['content'] = $this->ci->load->view($content, array_merge($options_data, $content_data), TRUE);
-		$this->ci->load->view($this->base_page, $options_data, $return_string);
+		$base_vars['content'] = $this->ci->load->view($content, array_merge($base_vars, $page_vars), TRUE);
+		$this->ci->load->view($this->base_page, $base_vars, $options['return_loaded']);
 	}
 }
 
