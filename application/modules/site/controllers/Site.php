@@ -16,17 +16,17 @@ class Site extends HMVC_Controller
 		parent::__construct();
 		$this->load->library('template');
 		$this->template->includes(array(
-			'header' => 'parts/header',
-			'navbar' => 'parts/navbar',
-			'footer' => 'parts/footer'
+			'_header' => 'parts/header',
+			'_navbar' => 'parts/navbar',
+			'_footer' => 'parts/footer'
 		), array(
-			'header' => array(
+			'_header' => array(
 				'title' => 'Medan Software',
 				'meta' => array(
 					array('name' => 'description', 'content' => 'Codeigniter 3 Starter - Basic | Medan Software')
 				)
 			),
-			'navbar' => array(
+			'_navbar' => array(
 				'brand' => array(
 					'name' => 'Medan Software',
 					'link' => site_url()
@@ -36,7 +36,7 @@ class Site extends HMVC_Controller
 					array('link' => base_url($this->router->fetch_module().'/about'), 'name' => 'about', 'text' => 'About')
 				)
 			),
-			'footer' => array(
+			'_footer' => array(
 				'copyright' => 'Medan Software'
 			)
 		));
