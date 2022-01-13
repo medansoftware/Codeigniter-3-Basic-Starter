@@ -124,6 +124,7 @@ class MY_Lang extends HMVC_Lang
 	 */
 	public function load($langfile, $idiom = '', $return = FALSE, $add_suffix = TRUE, $alt_path = '', $_module = '')
 	{
+		$lang = array();
 		$original_file_name = $langfile;
 
 		if (is_array($langfile))
