@@ -244,6 +244,10 @@ class MY_Lang extends HMVC_Lang
 								$lang[$key] = $value;
 							}
 						}
+						else
+						{
+							log_message('error', 'Invalid JSON format for language file: languages/' . $idiom . '/' . $langfile);
+						}
 
 						$this->language_file_content[$langfile][$idiom] = $lang;
 					}
@@ -260,6 +264,10 @@ class MY_Lang extends HMVC_Lang
 								$lang[$key] = $value;
 							}
 						}
+						else
+						{
+							log_message('error', 'Invalid JSON format for language file: languages/' . $idiom . '/' . $langfile);
+						}
 
 						$this->language_file_content[$langfile][$idiom] = $lang;
 					}
@@ -274,6 +282,10 @@ class MY_Lang extends HMVC_Lang
 							{
 								$lang[$key] = $value;
 							}
+						}
+						else
+						{
+							log_message('error', 'Invalid JSON format for language file: languages/' . $idiom . '/' . $langfile);
 						}
 
 						$this->language_file_content[$langfile][$idiom] = $lang;
@@ -290,6 +302,10 @@ class MY_Lang extends HMVC_Lang
 							{
 								$lang[$key] = $value;
 							}
+						}
+						else
+						{
+							log_message('error', 'Invalid JSON format for language file: languages/' . $idiom . '/' . $file);
 						}
 
 						$this->language_file_content[$langfile][$idiom] = $lang;
