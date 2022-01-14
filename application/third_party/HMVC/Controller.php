@@ -36,7 +36,7 @@ require dirname(__FILE__).'/Base.php';
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  **/
-class HMVC_Controller 
+class HMVC_Controller extends MY_Controller
 {
 	public $autoload = array();
 
