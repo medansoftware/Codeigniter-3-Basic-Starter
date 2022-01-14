@@ -19,6 +19,8 @@ class MY_Lang extends HMVC_Lang
 
 	public $language_file_content = array();
 
+	public $languages_dir;
+
 	public $languages_path;
 
 	public function __construct()
@@ -27,7 +29,8 @@ class MY_Lang extends HMVC_Lang
 
 		$this->base_language = config_item('language');
 		$this->current_language = array_key_exists('language', $_COOKIE)?$_COOKIE['language']:$this->base_language;
-		$this->languages_path = FCPATH.'public/assets/languages';
+		$this->set_languages_dir(config_item('languages_dir'));
+		$this->set_languages_path(config_item('languages_path'), config_item('languages_dir'));
 	}
 
 	/**
@@ -35,12 +38,24 @@ class MY_Lang extends HMVC_Lang
 	 *
 	 * @param      string  $path   Path to languages JSON files
 	 */
-	public function set_languages_path($path)
+	public function set_languages_path($path, $dir = NULL)
 	{
-		if (is_dir($this->languages_path))
+		$dir = (empty($dir))?config_item('languages_dir'):$dir;
+
+		if (is_dir(realpath($this->languages_path)))
 		{
-			$this->languages_path = $path;
+			$this->languages_path = realpath($path.DIRECTORY_SEPARATOR.$dir).DIRECTORY_SEPARATOR;
 		}
+	}
+
+	/**
+	 * JSON language directory name
+	 *
+	 * @param      string  $name   Directory name
+	 */
+	public function set_languages_dir($name)
+	{
+		$this->languages_dir = $name;
 	}
 
 	/**
@@ -228,8 +243,8 @@ class MY_Lang extends HMVC_Lang
 					$langfile = $original_file_name.'.json';
 					$_module OR $_module = get_instance()->router->fetch_module();
 
-					list($module_current_lang, $file) = Modules::find($langfile, $_module, 'languages/'.$idiom.'/');
-					list($module_default_lang, $file) = Modules::find($langfile, $_module, 'languages/'.$this->base_language.'/');
+					list($module_current_lang, $file) = Modules::find($langfile, $_module, $this->languages_dir.DIRECTORY_SEPARATOR.$idiom.'/');
+					list($module_default_lang, $file) = Modules::find($langfile, $_module, $this->languages_dir.DIRECTORY_SEPARATOR.$this->base_language.'/');
 
 					// check JSON language file in assets path by current language
 					if (file_exists($this->languages_path.DIRECTORY_SEPARATOR.$idiom.'/'.$langfile))
@@ -320,8 +335,8 @@ class MY_Lang extends HMVC_Lang
 					$langfile = str_replace(['_lang', '.php'], ['','.json'], $langfile);
 
 					$_module OR $_module = get_instance()->router->fetch_module();
-					list($module_current_lang, $langfile) = Modules::find($langfile, $_module, 'languages/'.$idiom.'/');
-					list($module_default_lang, $langfile) = Modules::find($langfile, $_module, 'languages/'.$this->base_language.'/');
+					list($module_current_lang, $langfile) = Modules::find($langfile, $_module, $this->languages_dir.DIRECTORY_SEPARATOR.$idiom.'/');
+					list($module_default_lang, $langfile) = Modules::find($langfile, $_module, $this->languages_dir.DIRECTORY_SEPARATOR.$this->base_language.'/');
 
 					// check JSON language file in assets path by current language
 					if (file_exists($this->languages_path.DIRECTORY_SEPARATOR.$idiom.'/'.$langfile))
