@@ -13,15 +13,15 @@ class Template
 
 	public function __construct($config = array())
 	{
-        $this->ci =& get_instance();
-        $this->initialize($config);
+		$this->ci =& get_instance();
+		$this->initialize($config);
 	}
 
 	/**
 	 * Initialize template
 	 *
 	 * @param      array  $config  Library config
-	 */
+	*/
 	public function initialize($config = array())
 	{
 		$this->set_base_page((isset($config['base_page']))?$config['base_page'] : 'base'); // HTML base page
@@ -141,7 +141,7 @@ class Template
 	 * @param      string  $page   Page name
 	 *
 	 * @return     self
-	 */
+	*/
 	public function exclude($page)
 	{
 		array_push($this->exclude_pages, $page);
