@@ -213,7 +213,11 @@ class Template
 						// merge vars or force merge vars
 						if ($options['merge_vars_as_page'] OR $options['force_merge_as_page'])
 						{
-							if (isset($include_vars[$name]))
+							if (isset($include_vars['include_vars']) && isset($include_vars['include_vars'][$name]))
+							{
+								$include['vars'] = array_merge($include['vars'], $include_vars['include_vars'][$name]);
+							}
+							elseif (isset($include_vars[$name]))
 							{
 								$include['vars'] = array_merge($include['vars'], $include_vars[$name]);
 							}
