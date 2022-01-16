@@ -238,7 +238,8 @@ class MY_Lang extends HMVC_Lang
 			if ($found !== TRUE)
 			{
 				// langfile with slash?
-				if (is_array(explode('/', $original_file_name)))
+				$has_slash = explode('/', $original_file_name);
+				if (is_array($has_slash) && count($has_slash) > 1)
 				{
 					$langfile = $original_file_name.'.json';
 					$_module OR $_module = get_instance()->router->fetch_module();
@@ -399,6 +400,33 @@ class MY_Lang extends HMVC_Lang
 						}
 
 						$this->language_file_content[$langfile][$idiom] = $lang;
+					}
+					// check JSON language file in APPPATH path
+					elseif (file_exists(APPPATH.config_item('languages_dir').DIRECTORY_SEPARATOR.$idiom.'/'.$langfile))
+					{
+						$found = TRUE;
+
+						if ($this->valid_json(file_get_contents(APPPATH.config_item('languages_dir').DIRECTORY_SEPARATOR.$idiom.'/'.$langfile)))
+						{
+							foreach (json_decode(file_get_contents(APPPATH.config_item('languages_dir').DIRECTORY_SEPARATOR.$idiom.'/'.$langfile)) as $key => $value)
+							{
+								$lang[$key] = $value;
+							}
+						}
+					}
+					// check JSON language file in APPPATH path by default language
+					elseif (file_exists(APPPATH.config_item('languages_dir').DIRECTORY_SEPARATOR.$this->base_language.'/'.$langfile))
+					{
+						$found = TRUE;
+						$idiom = $this->base_language;
+
+						if ($this->valid_json(file_get_contents(APPPATH.config_item('languages_dir').DIRECTORY_SEPARATOR.$idiom.'/'.$langfile)))
+						{
+							foreach (json_decode(file_get_contents(APPPATH.config_item('languages_dir').DIRECTORY_SEPARATOR.$idiom.'/'.$langfile)) as $key => $value)
+							{
+								$lang[$key] = $value;
+							}
+						}
 					}
 					else
 					{

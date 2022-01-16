@@ -96,7 +96,7 @@ $config['languages_path'] = FCPATH.'public/assets';
 | Directory name for JSON file language
 |
 */
-$config['languages_dir'] = 'languages';
+$config['languages_dir'] = 'language';
 
 /*
 |--------------------------------------------------------------------------
